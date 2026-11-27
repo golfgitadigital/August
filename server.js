@@ -317,8 +317,8 @@ app.delete("/api/assets/:id", async (req, res) => {
 const distDir = path.join(rootDir, "dist");
 if (fs.existsSync(distDir)) {
   app.use(express.static(distDir));
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
+  app.use((req, res, next) => {
+    if (req.method !== "GET" || req.path.startsWith("/api") || req.path.startsWith("/uploads")) {
       return next();
     }
     res.sendFile(path.join(distDir, "index.html"));
