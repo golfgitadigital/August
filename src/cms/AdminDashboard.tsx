@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { useCms } from "./CmsContext";
 import { AudienceTrafficReports } from "./AudienceTrafficReports";
 
-export function AdminDashboard({ onOpenEditor }: { onOpenEditor: (page: string) => void }) {
+export function AdminDashboard({
+  onOpenEditor,
+  onLogout,
+}: {
+  onOpenEditor: (page: string) => void;
+  onLogout?: () => void;
+}) {
   const { seoList, updateSeo, saveSeo, assets } = useCms();
   const [activeTab, setActiveTab] = useState<"overview" | "pages" | "globalseo" | "analytics">("overview");
   const [timeRange, setTimeRange] = useState("30d");
@@ -131,7 +137,7 @@ export function AdminDashboard({ onOpenEditor }: { onOpenEditor: (page: string) 
         </div>
 
         {/* Bottom user & live site preview */}
-        <div className="p-4 border-t border-[#261f3d] bg-[#0a0714] shrink-0">
+        <div className="p-4 border-t border-[#261f3d] bg-[#0a0714] shrink-0 space-y-2">
           <a
             href="/"
             target="_blank"
@@ -140,21 +146,36 @@ export function AdminDashboard({ onOpenEditor }: { onOpenEditor: (page: string) 
           >
             Visit Public Website ↗
           </a>
+
+          {onLogout && (
+            <button
+              type="button"
+              onClick={onLogout}
+              className="flex items-center justify-center gap-2 w-full py-2.5 bg-rose-500/10 border border-rose-500/20 hover:border-rose-500/50 rounded-xl text-xs font-bold text-rose-300 hover:bg-rose-500 hover:text-white transition cursor-pointer"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span>Log Out</span>
+            </button>
+          )}
         </div>
       </aside>
 
       {/* MAIN CONTENT AREA */}
       <main className="flex-1 flex flex-col overflow-y-auto">
         {/* Top Header */}
-        <header className="h-[70px] border-b border-[#261f3d] bg-[#0c0917]/70 backdrop-blur px-8 flex items-center justify-between sticky top-0 z-20">
+        <header className="admin-header h-[72px] border-b border-[#261f3d] bg-[#0c0917] px-8 flex items-center justify-between sticky top-0 z-20 shadow-md">
           <div>
-            <h2 className="text-lg font-black text-white capitalize">
+            <h2 className="text-xl font-black text-white tracking-wide capitalize drop-shadow-sm">
               {activeTab === "overview" && "Executive Analytics & Performance"}
               {activeTab === "pages" && "Site Pages & Visual Editor"}
               {activeTab === "globalseo" && "Site-wide SEO & Canonical Architecture"}
               {activeTab === "analytics" && "Audience Traffic & Referral Channels"}
             </h2>
-            <p className="text-xs text-[#8c84ad]">
+            <p className="text-xs text-[#a59ebf] font-medium mt-0.5">
               {activeTab === "overview" && "Real-time user engagement, regional telemetry, and traffic distribution"}
               {activeTab === "pages" && "Select any page to launch the live 1:1 visual Webflow-style studio"}
               {activeTab === "globalseo" && "Manage domain authority, Google Search Console, OpenGraph, Webclip and Favicons"}
@@ -166,13 +187,29 @@ export function AdminDashboard({ onOpenEditor }: { onOpenEditor: (page: string) 
             <select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="bg-[#181328] border border-[#2d2448] text-white text-xs rounded-lg px-3 py-1.5 outline-none font-bold"
+              className="bg-[#181328] border border-[#2d2448] text-white text-xs rounded-xl px-3 py-2 outline-none font-bold hover:border-[#fe9201]/50 cursor-pointer transition"
             >
               <option value="7d">Last 7 Days</option>
               <option value="30d">Last 30 Days</option>
               <option value="90d">Quarterly (90 Days)</option>
               <option value="1y">Year to Date (YTD)</option>
             </select>
+
+            {onLogout && (
+              <button
+                type="button"
+                onClick={onLogout}
+                title="Log Out of Admin"
+                className="flex items-center gap-1.5 px-3 py-2 bg-[#1b152e] hover:bg-rose-500/20 text-[#a59ebf] hover:text-rose-300 border border-[#2e2450] hover:border-rose-500/40 rounded-xl text-xs font-bold transition cursor-pointer"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span>Log Out</span>
+              </button>
+            )}
           </div>
         </header>
 

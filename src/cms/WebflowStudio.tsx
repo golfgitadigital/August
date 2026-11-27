@@ -7,9 +7,11 @@ type DeviceMode = "desktop" | "tablet" | "mobile";
 export function WebflowStudio({
   page: initialPage = "Home",
   onBackToDashboard,
+  onLogout,
 }: {
   page?: string;
   onBackToDashboard: () => void;
+  onLogout?: () => void;
 }) {
   const {
     content,
@@ -181,6 +183,21 @@ export function WebflowStudio({
           >
             <span>🚀</span> Publish & Save
           </button>
+
+          {onLogout && (
+            <button
+              onClick={onLogout}
+              title="Sign Out"
+              className="px-2.5 py-1.5 bg-[#251f2f] hover:bg-rose-500/20 text-[#a59ebf] hover:text-rose-300 border border-[#3e3450] hover:border-rose-500/40 rounded-lg text-xs font-bold transition flex items-center gap-1 cursor-pointer"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span>Exit</span>
+            </button>
+          )}
         </div>
       </header>
 

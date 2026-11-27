@@ -251,13 +251,41 @@
   transform: none;
 }
 
-header {
+header.site-header,
+header:not(.admin-header) {
   height: 80px;
   background: #fff;
   position: sticky;
   top: 0;
   z-index: 50;
   border-bottom: 1px solid #e9e8ee;
+}
+
+/* Admin Portal Accessibility & Contrast Enforcement */
+.admin-portal header,
+header.admin-header {
+  background: #0c0917 !important;
+  height: 72px !important;
+  border-bottom: 1px solid #261f3d !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 20 !important;
+  width: 100% !important;
+}
+
+.admin-portal h1,
+.admin-portal h2,
+.admin-portal h3,
+.admin-portal h4,
+.admin-header h1,
+.admin-header h2,
+.admin-header h3 {
+  color: #ffffff !important;
+}
+
+.admin-portal p.admin-subtitle,
+.admin-header p {
+  color: #a59ebf !important;
 }
 .header-inner {
   height: 100%;

@@ -3,6 +3,7 @@ import { Lang, translations } from "./i18n";
 import { CmsProvider } from "./cms/CmsContext";
 import { WebflowStudio } from "./cms/WebflowStudio";
 import { AdminDashboard } from "./cms/AdminDashboard";
+import { AdminLogin, ADMIN_AUTH_KEY } from "./cms/AdminLogin";
 import { EditableText, EditableImage } from "./cms/VisualEditor";
 
 const LangContext = createContext<{
@@ -1926,6 +1927,21 @@ function App() {
   const [page, setPage] = useState<Page | "Admin">(getPageFromUrl);
   const [adminView, setAdminView] = useState<"dashboard" | "studio">("dashboard");
   const [adminEditingPage, setAdminEditingPage] = useState<string>("Home");
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    try {
+      return Boolean(localStorage.getItem(ADMIN_AUTH_KEY) || sessionStorage.getItem(ADMIN_AUTH_KEY));
+    } catch {
+      return false;
+    }
+  });
+
+  const handleAdminLogout = () => {
+    try {
+      localStorage.removeItem(ADMIN_AUTH_KEY);
+      sessionStorage.removeItem(ADMIN_AUTH_KEY);
+    } catch {}
+    setIsAdminAuthenticated(false);
+  };
 
   useEffect(() => {
     if (page !== "Admin") {
@@ -1937,9 +1953,13 @@ function App() {
     } else {
       document.documentElement.classList.add("admin-mode");
       document.documentElement.classList.remove("has-magnetic-cursor");
-      document.title = adminView === "dashboard" ? "AuGust Admin | Executive Dashboard & SEO" : `AuGust Studio | Editing ${adminEditingPage}`;
+      document.title = !isAdminAuthenticated
+        ? "AuGust Admin | Secure Login Gate"
+        : adminView === "dashboard"
+          ? "AuGust Admin | Executive Dashboard & SEO"
+          : `AuGust Studio | Editing ${adminEditingPage}`;
     }
-  }, [page, adminView, adminEditingPage]);
+  }, [page, adminView, adminEditingPage, isAdminAuthenticated]);
 
   useEffect(() => {
     const handlePopState = () => {
@@ -1968,6 +1988,15 @@ function App() {
   }, [page]);
 
   if (page === "Admin") {
+    if (!isAdminAuthenticated) {
+      return (
+        <AdminLogin
+          onLoginSuccess={() => setIsAdminAuthenticated(true)}
+          onBackToSite={() => go("Home")}
+        />
+      );
+    }
+
     return (
       <CmsProvider>
         {adminView === "dashboard" ? (
@@ -1976,11 +2005,13 @@ function App() {
               setAdminEditingPage(selectedPage);
               setAdminView("studio");
             }}
+            onLogout={handleAdminLogout}
           />
         ) : (
           <WebflowStudio
             page={adminEditingPage}
             onBackToDashboard={() => setAdminView("dashboard")}
+            onLogout={handleAdminLogout}
           />
         )}
       </CmsProvider>
