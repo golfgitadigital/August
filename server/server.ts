@@ -12,6 +12,11 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Detect project root regardless of whether running from root or /server
+const rootDir = fs.existsSync(path.join(__dirname, "public"))
+  ? __dirname
+  : path.join(__dirname, "..");
+
 const app = express();
 const PORT = Number(process.env.PORT) || Number(process.env.CMS_SERVER_PORT) || 5000;
 
@@ -19,7 +24,7 @@ app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
 // Upload directory for assets
-const uploadDir = path.join(__dirname, "../public/uploads");
+const uploadDir = path.join(rootDir, "public", "uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
@@ -39,7 +44,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Fallback JSON persistence file
-const fallbackFilePath = path.join(__dirname, "cms_fallback_data.json");
+const fallbackFilePath = path.join(rootDir, "server", "cms_fallback_data.json");
 interface FallbackData {
   seo: Record<string, any>;
   sections: Record<string, Record<string, any>>;
@@ -75,10 +80,7 @@ let isMysqlConnected = false;
 
 async function initDB() {
   try {
-    const connection = await mysql.createConnection(dbConfig);
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`);
-    await connection.end();
-
+    // Connect directly to the database provisioned in Hostinger hPanel
     pool = mysql.createPool({
       ...dbConfig,
       database: DB_NAME,
@@ -86,6 +88,11 @@ async function initDB() {
       connectionLimit: 10,
       queueLimit: 0,
     });
+
+    // Test connectivity
+    const testConn = await pool.getConnection();
+    await testConn.ping();
+    testConn.release();
 
     // 1. Pages & SEO Table
     await pool.query(`
@@ -378,7 +385,7 @@ app.delete("/api/assets/:id", async (req, res) => {
 });
 
 // Serve compiled Vite production frontend (dist) when available
-const distDir = path.join(__dirname, "../dist");
+const distDir = path.join(rootDir, "dist");
 if (fs.existsSync(distDir)) {
   app.use(express.static(distDir));
   app.get("*", (req, res, next) => {
@@ -389,8 +396,10 @@ if (fs.existsSync(distDir)) {
   });
 }
 
-initDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`[CMS] Backend server running on http://localhost:${PORT}`);
-  });
+// Start HTTP server immediately to prevent Hostinger gateway timeouts
+app.listen(PORT, () => {
+  console.log(`[CMS] Backend server running on port ${PORT}`);
 });
+
+// Initialize database connection asynchronously
+initDB();

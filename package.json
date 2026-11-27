@@ -4,11 +4,11 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "tsx server/server.ts",
+    "start": "node server.js",
     "dev": "vite",
     "server": "tsx server/server.ts",
     "cms": "concurrently \"npm run server\" \"npm run dev\"",
-    "build": "vite build",
+    "build": "vite build && esbuild server/server.ts --platform=node --format=esm --packages=external --outfile=server.js",
     "preview": "vite preview",
     "format": "oxfmt"
   },
