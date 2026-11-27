@@ -314,6 +314,10 @@ app.delete("/api/assets/:id", async (req, res) => {
   }
   res.json({ success: true, message: "Asset deleted" });
 });
+const publicDir = path.join(rootDir, "public");
+if (fs.existsSync(publicDir)) {
+  app.use(express.static(publicDir));
+}
 const distDir = path.join(rootDir, "dist");
 if (fs.existsSync(distDir)) {
   app.use(express.static(distDir));
