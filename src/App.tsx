@@ -453,6 +453,18 @@ function Header({ page }: { page: Page }) {
     };
   }, []);
 
+  // Lock body scroll when mobile menu is open to prevent background scrolling
+  useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   const navLabels: Record<Page, string> = {
     Home: t.nav_home,
     About: t.nav_about,
@@ -467,22 +479,21 @@ function Header({ page }: { page: Page }) {
   return (
     <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
       <div className="header-inner">
+        {/* 1. Mobile Menu Button on Far Left (Hidden on Desktop) */}
+        <button
+          className="menu-btn"
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
+          <Icon name={open ? "close" : "menu"} size={26} />
+        </button>
+
+        {/* 2. Logo (Centered on mobile, Left on desktop) */}
         <Logo />
+
+        {/* 3. Navigation Links (Desktop row / Mobile drawer) */}
         <nav className={open ? "open" : ""}>
-          <div className="mobile-menu-header">
-            <span className="mobile-menu-title">Main Navigation</span>
-            <label className="mobile-language">
-              <Icon name="globe" size={14} />
-              <select
-                aria-label="Language"
-                value={lang}
-                onChange={(e) => setLang(e.target.value as Lang)}
-              >
-                <option value="EN">EN</option>
-                <option value="SW">SW</option>
-              </select>
-            </label>
-          </div>
           <div className="mobile-nav-links">
             {nav.map((n) => (
               <NavLink
@@ -509,6 +520,8 @@ function Header({ page }: { page: Page }) {
             </div>
           </div>
         </nav>
+
+        {/* 4. Header Actions (Language on Far Right on mobile + Wholesale Button on desktop) */}
         <div className="header-actions">
           <label className="language">
             <Icon name="globe" size={16} />
@@ -523,9 +536,6 @@ function Header({ page }: { page: Page }) {
           </label>
           <Button onClick={() => go("Contact")}>{t.btn_wholesale_order}</Button>
         </div>
-        <button className="menu-btn" aria-label="Toggle menu" aria-expanded={open} onClick={() => setOpen(!open)}>
-          <Icon name={open ? "close" : "menu"} size={25} />
-        </button>
       </div>
     </header>
   );
