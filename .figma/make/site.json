@@ -1,0 +1,10 @@
+{
+  "description": "Explore AuGust Aurea’s FMCG distribution, trading and mining services, browse products and trade news, and connect with a trusted East African supply partner.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
