@@ -332,8 +332,11 @@ header nav {
   margin-left: auto;
   height: 100%;
 }
-header nav > button,
-header nav > a.nav-link {
+.mobile-nav-links {
+  display: contents;
+}
+header nav button,
+header nav a.nav-link {
   font-size: 14px;
   font-weight: 700;
   height: 100%;
@@ -344,8 +347,8 @@ header nav > a.nav-link {
   align-items: center;
   text-decoration: none;
 }
-header nav > button:after,
-header nav > a.nav-link:after {
+header nav button:after,
+header nav a.nav-link:after {
   content: "";
   position: absolute;
   bottom: 22px;
@@ -356,10 +359,10 @@ header nav > a.nav-link:after {
   background: var(--red);
   transition: 0.25s;
 }
-header nav > button:hover:after,
-header nav > button.active:after,
-header nav > a.nav-link:hover:after,
-header nav > a.nav-link.active:after {
+header nav button:hover:after,
+header nav button.active:after,
+header nav a.nav-link:hover:after,
+header nav a.nav-link.active:after {
   width: 24px;
 }
 .header-actions {
@@ -1771,8 +1774,8 @@ footer {
   header nav {
     gap: 16px;
   }
-  header nav > button,
-  header nav > a.nav-link {
+  header nav button,
+  header nav a.nav-link {
     font-size: 13px;
     padding: 0 2px;
   }
