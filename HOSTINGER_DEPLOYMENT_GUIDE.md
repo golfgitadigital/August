@@ -176,8 +176,9 @@ You can upload using either the **hPanel File Manager** or **SFTP / Git**.
 3. **Check the CMS Admin Portal:**
    Visit:
    ```text
-   https://yourdomain.com/admin
+   https://yourdomain.com/Studio
    ```
+   - Enter your secure Admin credentials (`admin` / `August@2026`).
    - Look at the top-left badge: **"Live MySQL DB"** should glow green.
    - Test making a quick edit in **Pages & Editor** and clicking **Publish & Save**.
    - Check the **Audience Traffic** tab and test downloading your reports as **CSV** or **Excel (.XLS)**.

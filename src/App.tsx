@@ -130,12 +130,23 @@ const pageMetadata: Record<Page, PageMeta> = {
 function getPageFromUrl(): Page | "Admin" {
   if (typeof window === "undefined") return "Home";
   const path = window.location.pathname.replace(/\/$/, "") || "/";
-  if (path === "/admin") return "Admin";
+  const lowerPath = path.toLowerCase();
+
+  // Route to Admin Studio on /Studio or /studio (and redirect /admin to /Studio)
+  if (lowerPath === "/studio" || lowerPath === "/admin") {
+    if (path !== "/Studio") {
+      try {
+        window.history.replaceState({ page: "Admin" }, "", "/Studio");
+      } catch {}
+    }
+    return "Admin";
+  }
+
   if (pathToPage[path]) return pathToPage[path];
 
   // Also support hash fallback (e.g., #/about or #about) for static servers
   const hash = window.location.hash.replace(/^#\/?/, "").toLowerCase();
-  if (hash === "admin") return "Admin";
+  if (hash === "studio" || hash === "admin") return "Admin";
   const matched = nav.find((p) => p.toLowerCase() === hash);
   if (matched) return matched;
 
@@ -1971,7 +1982,7 @@ function App() {
 
   globalNavigate = (p) => {
     setPage(p);
-    const targetPath = p === "Admin" ? "/admin" : pageToPath[p as Page];
+    const targetPath = p === "Admin" ? "/Studio" : pageToPath[p as Page];
     if (window.location.pathname !== targetPath) {
       window.history.pushState({ page: p }, "", targetPath);
     }
