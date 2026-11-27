@@ -333,7 +333,8 @@ function NavLink({
         onClick();
       }}
     >
-      {children}
+      <span className="nav-label">{children}</span>
+      <span className="nav-arrow" aria-hidden="true">→</span>
     </a>
   );
 }
@@ -464,25 +465,48 @@ function Header({ page }: { page: Page }) {
   };
 
   return (
-    <header className={scrolled ? "scrolled" : ""}>
+    <header className={`site-header ${scrolled ? "scrolled" : ""}`}>
       <div className="header-inner">
         <Logo />
         <nav className={open ? "open" : ""}>
-          {nav.map((n) => (
-            <NavLink
-              key={n}
-              page={n}
-              active={page === n}
-              onClick={() => {
-                go(n);
-                setOpen(false);
-              }}
-            >
-              {navLabels[n]}
-            </NavLink>
-          ))}
+          <div className="mobile-menu-header">
+            <span className="mobile-menu-title">Main Navigation</span>
+            <label className="mobile-language">
+              <Icon name="globe" size={14} />
+              <select
+                aria-label="Language"
+                value={lang}
+                onChange={(e) => setLang(e.target.value as Lang)}
+              >
+                <option value="EN">EN</option>
+                <option value="SW">SW</option>
+              </select>
+            </label>
+          </div>
+          <div className="mobile-nav-links">
+            {nav.map((n) => (
+              <NavLink
+                key={n}
+                page={n}
+                active={page === n}
+                onClick={() => {
+                  go(n);
+                  setOpen(false);
+                }}
+              >
+                {navLabels[n]}
+              </NavLink>
+            ))}
+          </div>
           <div className="mobile-actions">
-            <Button onClick={() => go("Contact")}>{t.btn_wholesale_order}</Button>
+            <Button onClick={() => { go("Contact"); setOpen(false); }}>
+              {t.btn_wholesale_order}
+            </Button>
+            <div className="mobile-corridor-info">
+              <span>Dar es Salaam HQ</span>
+              <span>•</span>
+              <span>East Africa Trade Corridor</span>
+            </div>
           </div>
         </nav>
         <div className="header-actions">

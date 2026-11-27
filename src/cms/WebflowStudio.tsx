@@ -76,7 +76,7 @@ export function WebflowStudio({
   };
 
   const containerWidth =
-    device === "desktop" ? "100%" : device === "tablet" ? "820px" : "400px";
+    device === "desktop" ? "100%" : device === "tablet" ? "768px" : "390px";
 
   // Helper for selecting elements
   const selectElem = (sectionKey: string, fieldKey: string, type: "text" | "image", tag: string) => {
@@ -337,7 +337,9 @@ export function WebflowStudio({
         <main className="flex-1 bg-[#0b0b0b] flex flex-col items-center justify-start p-6 overflow-auto relative">
           <div
             style={{ width: containerWidth, maxWidth: device === "desktop" ? "1280px" : undefined }}
-            className="bg-[#080300] text-white min-h-full rounded-lg shadow-2xl overflow-y-auto relative border border-[#2b2b2b] transition-all duration-300 antialiased font-['Manrope',sans-serif]"
+            className={`studio-canvas-content ${
+              device === "mobile" ? "canvas-mobile" : device === "tablet" ? "canvas-tablet" : "canvas-desktop"
+            } bg-[#080300] text-white min-h-full rounded-lg shadow-2xl overflow-y-auto relative border border-[#2b2b2b] transition-all duration-300 antialiased font-['Manrope',sans-serif]`}
           >
             {/* === PAGE: HOME CANVAS === */}
             {activePage === "Home" && (
@@ -346,7 +348,9 @@ export function WebflowStudio({
                 {currentSections.hero && (
                   <div
                     onClick={() => selectElem("hero", "title_1", "text", "H1")}
-                    className="relative overflow-hidden bg-[#080300] text-white py-24 px-12 group cursor-pointer border-2 border-transparent hover:border-[#fe9201]/40"
+                    className={`relative overflow-hidden bg-[#080300] text-white group cursor-pointer border-2 border-transparent hover:border-[#fe9201]/40 transition-all ${
+                      device === "mobile" ? "py-12 px-6" : device === "tablet" ? "py-16 px-8" : "py-24 px-12"
+                    }`}
                   >
                     <img
                       src={currentSections.hero.bg_image || "https://images.unsplash.com/photo-1786207289475-e08d256f0258?auto=format&fit=crop&w=1800&q=85"}
@@ -358,7 +362,7 @@ export function WebflowStudio({
                       }}
                       className="absolute inset-0 w-full h-full object-cover opacity-25 hover:opacity-40 transition cursor-pointer"
                     />
-                    <div className="relative z-10 max-w-3xl space-y-4">
+                    <div className={`relative z-10 space-y-4 ${device === "mobile" ? "max-w-full" : "max-w-3xl"}`}>
                       <div className="flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[1.38px] text-white">
                         <span className="w-9 h-0.5 bg-[#fe9201] inline-block shrink-0"></span>
                         <span
@@ -375,7 +379,13 @@ export function WebflowStudio({
                         </span>
                       </div>
 
-                      <h1 className="text-5xl md:text-6xl font-extrabold tracking-[-3.5px] leading-tight text-white">
+                      <h1 className={`font-extrabold leading-[1.12] text-white ${
+                        device === "mobile"
+                          ? "text-[30px] sm:text-[32px] tracking-[-1.2px]"
+                          : device === "tablet"
+                            ? "text-4xl sm:text-5xl tracking-[-2.5px]"
+                            : "text-5xl md:text-6xl tracking-[-3.5px]"
+                      }`}>
                         <span
                           contentEditable
                           suppressContentEditableWarning
@@ -412,22 +422,24 @@ export function WebflowStudio({
                           e.stopPropagation();
                           selectElem("hero", "copy", "text", "P");
                         }}
-                        className="text-base text-[#cfcfcf] max-w-xl leading-relaxed outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1"
+                        className={`text-[#cfcfcf] leading-relaxed outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1 ${
+                          device === "mobile" ? "text-sm max-w-full" : "text-base max-w-xl"
+                        }`}
                       >
                         {currentSections.hero.copy}
                       </p>
 
-                      <div className="flex items-center gap-3 pt-4">
+                      <div className={`flex gap-3 pt-3 ${device === "mobile" ? "flex-col w-full" : "items-center"}`}>
                         <button
                           type="button"
-                          className="h-12 px-6 bg-[#fe9201] text-[#080300] font-extrabold text-[11px] tracking-[0.14em] uppercase rounded flex items-center gap-3 border border-[#fe9201] cursor-pointer"
+                          className="h-12 px-6 bg-[#fe9201] text-[#080300] font-extrabold text-[11px] tracking-[0.14em] uppercase rounded flex items-center justify-center gap-3 border border-[#fe9201] cursor-pointer"
                         >
                           <span>{currentSections.hero.btn_primary || "Enquire Now"}</span>
                           <span className="text-base font-bold">→</span>
                         </button>
                         <button
                           type="button"
-                          className="h-12 px-6 bg-transparent text-white font-extrabold text-[11px] tracking-[0.14em] uppercase rounded flex items-center gap-3 border border-white cursor-pointer hover:bg-white hover:text-[#080300] transition-colors"
+                          className="h-12 px-6 bg-transparent text-white font-extrabold text-[11px] tracking-[0.14em] uppercase rounded flex items-center justify-center gap-3 border border-white cursor-pointer hover:bg-white hover:text-[#080300] transition-colors"
                         >
                           <span>{currentSections.hero.btn_secondary || "View Products"}</span>
                           <span className="text-base font-bold">→</span>
@@ -435,43 +447,51 @@ export function WebflowStudio({
                       </div>
                     </div>
 
-                    {/* Hero Right Map Watermark */}
-                    <div className="absolute right-4 top-[15%] h-[68%] opacity-20 pointer-events-none hidden md:block">
-                      <svg
-                        className="h-full w-auto"
-                        viewBox="0 0 150 190"
-                        role="img"
-                        aria-label="Tanzania trade network map"
-                      >
-                        <path
-                          fill="rgba(255, 255, 255, 0.05)"
-                          stroke="white"
-                          strokeWidth="1.2"
-                          d="M31 8 55 18 72 15 92 24 115 22 126 39 119 57 128 76 117 94 111 123 92 138 81 166 64 180 47 164 31 158 23 136 28 117 16 97 20 75 11 57 20 39 17 21Z"
-                        />
-                        <path
-                          fill="none"
-                          stroke="#fe9201"
-                          strokeWidth="1"
-                          strokeDasharray="2 2"
-                          d="M95 57 66 81 45 42M95 57 86 25M66 81 48 130M66 81 19 73M95 57l24-5"
-                        />
-                        {[[95, 57], [66, 81], [45, 42], [86, 25], [48, 130], [19, 73], [119, 52]].map((d, i) => (
-                          <circle key={i} cx={d[0]} cy={d[1]} r="3" fill="#fe9201" />
-                        ))}
-                      </svg>
-                    </div>
+                    {/* Hero Right Map Watermark - Hidden on mobile view */}
+                    {device !== "mobile" && (
+                      <div className="absolute right-4 top-[15%] h-[68%] opacity-20 pointer-events-none hidden md:block">
+                        <svg
+                          className="h-full w-auto"
+                          viewBox="0 0 150 190"
+                          role="img"
+                          aria-label="Tanzania trade network map"
+                        >
+                          <path
+                            fill="rgba(255, 255, 255, 0.05)"
+                            stroke="white"
+                            strokeWidth="1.2"
+                            d="M31 8 55 18 72 15 92 24 115 22 126 39 119 57 128 76 117 94 111 123 92 138 81 166 64 180 47 164 31 158 23 136 28 117 16 97 20 75 11 57 20 39 17 21Z"
+                          />
+                          <path
+                            fill="none"
+                            stroke="#fe9201"
+                            strokeWidth="1"
+                            strokeDasharray="2 2"
+                            d="M95 57 66 81 45 42M95 57 86 25M66 81 48 130M66 81 19 73M95 57l24-5"
+                          />
+                          {[[95, 57], [66, 81], [45, 42], [86, 25], [48, 130], [19, 73], [119, 52]].map((d, i) => (
+                            <circle key={i} cx={d[0]} cy={d[1]} r="3" fill="#fe9201" />
+                          ))}
+                        </svg>
+                      </div>
+                    )}
 
-                    {/* Hero Bottom Index */}
-                    <div className="absolute right-8 bottom-6 text-xs font-bold tracking-[1.41px] items-center gap-3 text-white hidden md:flex">
-                      DAR ES SALAAM <span className="w-10 h-px bg-[#fe9201] inline-block"></span> 06.7924° S
-                    </div>
+                    {/* Hero Bottom Index - Hidden on mobile */}
+                    {device !== "mobile" && (
+                      <div className="absolute right-8 bottom-6 text-xs font-bold tracking-[1.41px] items-center gap-3 text-white hidden md:flex">
+                        DAR ES SALAAM <span className="w-10 h-px bg-[#fe9201] inline-block"></span> 06.7924° S
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* 2. Credentials Bar */}
                 {currentSections.credentials && (
-                  <div className="bg-white border-b border-[#e3e2e8] py-6 px-12 grid grid-cols-2 md:grid-cols-4 text-[#080300]">
+                  <div className={`bg-white border-b border-[#e3e2e8] text-[#080300] transition-all ${
+                    device === "mobile"
+                      ? "py-4 px-4 grid grid-cols-2 gap-2"
+                      : "py-6 px-12 grid grid-cols-2 md:grid-cols-4"
+                  }`}>
                     {Object.keys(currentSections.credentials).map((k, idx) => (
                       <div
                         key={k}
@@ -485,7 +505,7 @@ export function WebflowStudio({
                           contentEditable
                           suppressContentEditableWarning
                           onBlur={(e) => updateSectionField("Home", "credentials", k, e.currentTarget.innerText)}
-                          className="outline-none font-bold text-xs uppercase tracking-[0.52px]"
+                          className="outline-none font-bold text-xs uppercase tracking-[0.52px] text-[#080300]"
                         >
                           {currentSections.credentials[k]}
                         </span>
@@ -496,29 +516,39 @@ export function WebflowStudio({
 
                 {/* 3. Who We Are Section */}
                 {currentSections.who && (
-                  <div className="py-20 px-12 bg-[#f5f4f8] text-[#1a1a2e]">
-                    <div className="max-w-6xl mx-auto grid md:grid-cols-[1fr_1.25fr] gap-12 items-center">
+                  <div className={`bg-[#f5f4f8] text-[#1a1a2e] transition-all ${
+                    device === "mobile" ? "py-12 px-6" : device === "tablet" ? "py-16 px-8" : "py-20 px-12"
+                  }`}>
+                    <div className={`max-w-6xl mx-auto items-center ${
+                      device === "mobile" ? "grid grid-cols-1 gap-8" : "grid md:grid-cols-[1fr_1.25fr] gap-12"
+                    }`}>
                       <div className="space-y-6">
                         <div className="grid grid-cols-[auto_1fr] gap-6 items-start">
                           <span
-                            className="text-[69px] font-extrabold text-transparent select-none leading-[0.85] tracking-[-5px]"
+                            className={`font-extrabold text-transparent select-none leading-[0.85] ${
+                              device === "mobile" ? "text-[46px] tracking-[-3px]" : "text-[69px] tracking-[-5px]"
+                            }`}
                             style={{ WebkitTextStroke: "1px #08030033" }}
                           >
                             01
                           </span>
                           <div>
-                            <div className="flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[1.38px] text-[#080300] mb-6">
+                            <div className="flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[1.38px] text-[#080300] mb-4">
                               <span className="w-9 h-0.5 bg-[#fe9201] inline-block shrink-0"></span>
                               <span>{currentSections.who.eyebrow}</span>
                             </div>
 
-                            <h2 className="text-4xl md:text-5xl font-extrabold text-[#080300] tracking-[-2px] leading-[1.08] m-0">
+                            <h2 className={`font-extrabold text-[#080300] leading-[1.08] m-0 ${
+                              device === "mobile"
+                                ? "text-[28px] sm:text-[32px] tracking-[-1.2px]"
+                                : "text-4xl md:text-5xl tracking-[-2px]"
+                            }`}>
                               <span
                                 contentEditable
                                 suppressContentEditableWarning
                                 onBlur={(e) => updateSectionField("Home", "who", "title_1", e.currentTarget.innerText)}
                                 onClick={() => selectElem("who", "title_1", "text", "H2")}
-                                className="outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1"
+                                className="outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1 text-[#080300]"
                               >
                                 {currentSections.who.title_1}
                               </span>
@@ -528,10 +558,11 @@ export function WebflowStudio({
                                 suppressContentEditableWarning
                                 onBlur={(e) => updateSectionField("Home", "who", "title_2", e.currentTarget.innerText)}
                                 onClick={() => selectElem("who", "title_2", "text", "H2")}
-                                className="outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1"
+                                className="outline-none hover:ring-1 hover:ring-[#fe9201] rounded px-1 text-[#080300]"
                               >
                                 {currentSections.who.title_2}
                               </span>
+                              <span className="inline-block w-2.5 h-2.5 rounded-full bg-[#080300] ml-2.5 align-middle mb-1"></span>
                             </h2>
                           </div>
                         </div>
@@ -548,7 +579,7 @@ export function WebflowStudio({
 
                         <div className="inline-flex items-center gap-3 text-base font-extrabold text-[#080300] cursor-pointer hover:text-[#fe9201] transition-colors">
                           <span>{currentSections.who.link_text}</span>
-                          <span className="text-lg">→</span>
+                          <span className="text-lg font-bold">→</span>
                         </div>
                       </div>
 
@@ -561,10 +592,12 @@ export function WebflowStudio({
                             selectElem("who", "image", "image", "IMG");
                             setImagePopup({ sectionKey: "who", fieldKey: "image", currentSrc: currentSections.who.image });
                           }}
-                          className="w-full h-96 object-cover rounded shadow-lg border-2 border-transparent hover:border-[#fe9201] cursor-pointer"
+                          className={`w-full object-cover rounded shadow-lg border-2 border-transparent hover:border-[#fe9201] cursor-pointer ${
+                            device === "mobile" ? "h-72" : "h-96"
+                          }`}
                         />
-                        <div className="absolute -bottom-4 -left-4 bg-white p-5 border-t-2 border-[#fe9201] shadow-lg">
-                          <b className="block text-base text-[#080300] font-extrabold">{currentSections.who.badge_bold}</b>
+                        <div className="absolute -bottom-3 -left-3 bg-white p-4 border-t-2 border-[#fe9201] shadow-lg">
+                          <b className="block text-sm md:text-base text-[#080300] font-extrabold">{currentSections.who.badge_bold}</b>
                           <span className="text-xs text-[#777]">{currentSections.who.badge_sub}</span>
                         </div>
                       </div>
@@ -604,19 +637,27 @@ export function WebflowStudio({
 
                 {/* 5. Commitments Dark Section */}
                 {currentSections.commitments && (
-                  <div className="py-20 px-12 bg-[#080300] text-white border-t border-white/10 relative overflow-hidden">
-                    <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+                  <div className={`bg-[#080300] text-white border-t border-white/10 relative overflow-hidden transition-all ${
+                    device === "mobile" ? "py-12 px-6" : device === "tablet" ? "py-16 px-8" : "py-20 px-12"
+                  }`}>
+                    <div className={`max-w-6xl mx-auto items-center ${
+                      device === "mobile" ? "grid grid-cols-1 gap-8" : "grid md:grid-cols-2 gap-12"
+                    }`}>
                       <div className="space-y-4">
                         <div className="flex items-center gap-3 text-xs font-extrabold uppercase tracking-[1.38px] text-[#fe9201]">
                           <span className="w-9 h-0.5 bg-[#fe9201] inline-block"></span>
                           <span>{currentSections.commitments.eyebrow}</span>
                         </div>
-                        <h2 className="text-4xl font-extrabold leading-tight">
+                        <h2 className={`font-extrabold leading-tight text-white ${
+                          device === "mobile" ? "text-2xl sm:text-3xl" : "text-4xl"
+                        }`}>
                           <span>{currentSections.commitments.title_1}</span>
                           <br />
                           <span>{currentSections.commitments.title_2}</span>
                         </h2>
-                        <div className="grid grid-cols-2 gap-3 pt-4 text-xs font-bold text-[#cfcfcf]">
+                        <div className={`grid gap-3 pt-4 text-xs font-bold text-[#cfcfcf] ${
+                          device === "mobile" ? "grid-cols-1" : "grid-cols-2"
+                        }`}>
                           {["commit_1", "commit_2", "commit_3", "commit_4"].map((k) => (
                             <div key={k} className="flex items-center gap-2">
                               <span className="text-[#fe9201]">✓</span>
@@ -635,7 +676,9 @@ export function WebflowStudio({
                             selectElem("commitments", "truck_image", "image", "IMG");
                             setImagePopup({ sectionKey: "commitments", fieldKey: "truck_image", currentSrc: currentSections.commitments.truck_image });
                           }}
-                          className="w-full h-72 object-cover rounded shadow-lg border-2 border-transparent hover:border-[#fe9201] cursor-pointer"
+                          className={`w-full object-cover rounded shadow-lg border-2 border-transparent hover:border-[#fe9201] cursor-pointer ${
+                            device === "mobile" ? "h-56" : "h-72"
+                          }`}
                         />
                       </div>
                     </div>
@@ -649,7 +692,9 @@ export function WebflowStudio({
               <div className="space-y-0">
                 {/* Hero section of selected page */}
                 {currentSections.hero && (
-                  <div className="relative bg-[#080300] text-white py-20 px-12 border-b border-white/10 overflow-hidden">
+                  <div className={`relative bg-[#080300] text-white border-b border-white/10 overflow-hidden transition-all ${
+                    device === "mobile" ? "py-12 px-6" : device === "tablet" ? "py-16 px-8" : "py-20 px-12"
+                  }`}>
                     <img
                       src={currentSections.hero.image || currentSections.hero.bg_image || "https://images.unsplash.com/photo-1586528116022-aeda1613c63d?auto=format&fit=crop&w=1400&q=80"}
                       alt=""
@@ -660,7 +705,7 @@ export function WebflowStudio({
                       }}
                       className="absolute inset-0 w-full h-full object-cover opacity-20 hover:opacity-35 transition cursor-pointer"
                     />
-                    <div className="relative z-10 max-w-3xl space-y-3">
+                    <div className={`relative z-10 space-y-3 ${device === "mobile" ? "max-w-full" : "max-w-3xl"}`}>
                       <div className="flex items-center gap-3.5 text-xs font-extrabold uppercase tracking-[1.38px] text-white">
                         <span className="w-9 h-0.5 bg-[#fe9201] inline-block shrink-0"></span>
                         <span
@@ -678,7 +723,9 @@ export function WebflowStudio({
                         suppressContentEditableWarning
                         onBlur={(e) => updateSectionField(activePage, "hero", "title", e.currentTarget.innerText)}
                         onClick={() => selectElem("hero", "title", "text", "H1")}
-                        className="text-4xl md:text-5xl font-extrabold tracking-tight leading-tight outline-none"
+                        className={`font-extrabold tracking-tight leading-tight outline-none text-white ${
+                          device === "mobile" ? "text-2xl sm:text-3xl" : "text-4xl md:text-5xl"
+                        }`}
                       >
                         {currentSections.hero.title}
                       </h1>
@@ -687,7 +734,9 @@ export function WebflowStudio({
                         suppressContentEditableWarning
                         onBlur={(e) => updateSectionField(activePage, "hero", "copy", e.currentTarget.innerText)}
                         onClick={() => selectElem("hero", "copy", "text", "P")}
-                        className="text-base text-[#bbb] leading-relaxed outline-none"
+                        className={`text-[#bbb] leading-relaxed outline-none ${
+                          device === "mobile" ? "text-sm" : "text-base"
+                        }`}
                       >
                         {currentSections.hero.copy}
                       </p>
@@ -696,7 +745,9 @@ export function WebflowStudio({
                 )}
 
                 {/* Render remaining sections of active page */}
-                <div className="py-12 px-12 bg-white text-[#1a1a2e] space-y-12">
+                <div className={`bg-white text-[#1a1a2e] space-y-8 ${
+                  device === "mobile" ? "py-8 px-4" : "py-12 px-12"
+                }`}>
                   {Object.keys(currentSections)
                     .filter((k) => k !== "hero")
                     .map((secKey) => {
